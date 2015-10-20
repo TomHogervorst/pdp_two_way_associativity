@@ -69,8 +69,8 @@ begin
 
    cache_proc: process(clk, reset, mem_busy, cache_address, 
       state_reg, state, state_next, 
-      address_next, byte_we_next, cache_tag0_in, --Stage1
-      cache_tag_reg, cache_tag0_out,             --Stage2
+      address_next, byte_we_next, cache_tag0_in, cache_tag1_in, --Stage1
+      cache_tag_reg, cache_tag0_out, cache_tag1_out,            --Stage2
       cpu_address) --Stage3
    begin
 
@@ -81,7 +81,7 @@ begin
          state <= STATE_IDLE;
       when STATE_CHECKING =>        --current read in cached range, check if match
          cache_checking <= '1';
-         if cache_tag0_out /= cache_tag_reg or cache_tag0_out = ONES(8 downto 0) then
+         if cache_tag1_out /= cache_tag_reg or cache_tag1_out = ONES(8 downto 0) then
             cache_miss <= '1';
             state <= STATE_MISSED;
          else
@@ -116,14 +116,17 @@ begin
             cache_access <= '1';
             if byte_we_next = "0000" then     --read cycle
                cache_we0 <= '0';
+			   cache_we1 <= '0';
                state_next <= STATE_CHECKING;  --need to check if match
             else
                cache_we0 <= '1';               --update cache tag
+			   cache_we1 <= '1';
                state_next <= STATE_WAITING;
             end if;
          else
             cache_access <= '0';
             cache_we0 <= '0';
+			cache_we1 <= '0';
             state_next <= STATE_IDLE;
          end if;
       else
@@ -131,16 +134,20 @@ begin
          cache_access <= '0';
          if state = STATE_MISSED then
             cache_we0 <= '1';                  --update cache tag
+			cache_we1 <= '1';                  --update cache tag
          else
             cache_we0 <= '0';
+			cache_we1 <= '0';
          end if;
          state_next <= state;
       end if;
 
       if byte_we_next = "0000" or byte_we_next = "1111" then  --read or 32-bit write
          cache_tag0_in <= address_next(20 downto 12);
+		 cache_tag1_in <= address_next(20 downto 12);
       else
          cache_tag0_in <= ONES(8 downto 0);  --invalid tag
+		 cache_tag1_in <= ONES(8 downto 0);  --invalid tag
       end if;
 
       if reset = '1' then
@@ -149,7 +156,7 @@ begin
       elsif rising_edge(clk) then
          state_reg <= state_next;
          if state = STATE_IDLE and state_reg /= STATE_MISSED then
-            cache_tag_reg <= cache_tag0_in;
+            cache_tag_reg <= cache_tag1_in;
          end if;
       end if;
 
@@ -353,8 +360,10 @@ begin
          WE   => cache_we1);
 		 
 		 cache_ram0_data_w <= cache_ram_data_w;
+		 cache_ram1_data_w <= cache_ram_data_w;
 		 cache_ram0_byte_we <= cache_ram_byte_we;
-		 cache_ram_data_r <= cache_ram0_data_r;
+		 cache_ram1_byte_we <= cache_ram_byte_we;
+		 cache_ram_data_r <= cache_ram1_data_r;
 		 
 	cache_data0: cache_ram     -- cache data storage
 	port map (

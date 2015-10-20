@@ -344,29 +344,29 @@ begin  --architecture
       data_write <= cpu_data_w;
       gpio0_out(28 downto 24) <= ZERO(28 downto 24);
 	  
-	  	  process(cpu_byte_we, cpu_address, cpu_data_w)
-	  begin
-	  if cpu_byte_we = "1111" then
-	   report "The value of 'cpu_address' is " & integer'image( to_integer(signed(cpu_address)));
-	   report "The value of 'cpu_data_w' is " & integer'image(to_integer(signed(cpu_data_w)));
-	   end if;
-	  end process;
+	  	  -- process(cpu_byte_we, cpu_address, cpu_data_w)
+	  -- begin
+	  -- if cpu_byte_we = "1111" then
+	   -- report "The value of 'cpu_address' is " & integer'image( to_integer(signed(cpu_address)));
+	   -- report "The value of 'cpu_data_w' is " & integer'image(to_integer(signed(cpu_data_w)));
+	   -- end if;
+	  -- end process;
 	  
-	  	  process(clk, cpu_address, cpu_data_r, mem_busy, cache_miss, cache_checking)
-	  variable prev_addr : std_logic_vector(31 downto 0) := ZERO;
-	  variable prev_data : std_logic_vector(31 downto 0) := ZERO;
-	  begin
-	  if rising_edge(clk) then
-		if (cache_checking = '1' AND cache_miss = '0') OR (cache_miss = '1' AND mem_busy = '0') then
-		if NOT (cpu_address = prev_addr AND cpu_data_r = prev_data)  then  
-		report "The value of 'cpu_address' is " & integer'image( to_integer(signed(cpu_address)));
-	    report "The value of 'cpu_data_r' is " & integer'image(to_integer(signed(cpu_data_r)));
-		prev_addr := cpu_address;
-		prev_data := cpu_data_r;
-		end if;
-		end if;
-		end if;
-	  end process;
+	  	  -- process(clk, cpu_address, cpu_data_r, mem_busy, cache_miss, cache_checking)
+	  -- variable prev_addr : std_logic_vector(31 downto 0) := ZERO;
+	  -- variable prev_data : std_logic_vector(31 downto 0) := ZERO;
+	  -- begin
+	  -- if rising_edge(clk) then
+		-- if (cache_checking = '1' AND cache_miss = '0') OR (cache_miss = '1' AND mem_busy = '0') then
+		-- if NOT (cpu_address = prev_addr AND cpu_data_r = prev_data)  then  
+		-- report "The value of 'cpu_address' is " & integer'image( to_integer(signed(cpu_address)));
+	    -- report "The value of 'cpu_data_r' is " & integer'image(to_integer(signed(cpu_data_r)));
+		-- prev_addr := cpu_address;
+		-- prev_data := cpu_data_r;
+		-- end if;
+		-- end if;
+		-- end if;
+	  -- end process;
 
 end; --architecture logic
 
