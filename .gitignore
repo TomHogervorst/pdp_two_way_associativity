@@ -1,1 +1,9 @@
 plasma_ISE/
+benchmarks/cjpeg/
+sim/work/
+sim/grlib/
+sim/output.txt
+sim/vish_stacktrace.vstf
+sim/vsim.wlf
+sim/dumpdata.txt
+simlib/micron/

@@ -1,0 +1,25 @@
+Two way associativity, plan van aanpak:
+
+13-10:
+
+- verklein tag om ruimte te maken voor Least Recently Used bit: DIP in cache_tag register: cache_tag(8)
+- Zorg dat twee tags tegelijkertijd uit het cache_tag register kunnen worden, of dat twee cycles kunnen worden besteed om beiden tags te checken.
+- Als er een cache miss is, kan dit gebeuren tijdens DDR access, maar anders is het mooier als het in een cycle kan.
+- Er moet een update process komen voor de LRU bit: twee tags moeten na elkaar of tegelijkertijd kunnen worden aangepast. 
+
+20-10:
+
+- Apart LRU bit cache/register.
+- Twee tags + LRU uitlezen bij read. 		-> gebeurt in zelfde cycle als tag read in originele versie
+	Als er een cache-miss is, dan wordt LRU tag en data vervangen. LRU bit wordt geflipt. 		-> bit flip kan gebeuren tijdens memory access
+	Als er een cache-hit is, dan wordt LRU bit geset op de relevante waarde. Het correcte word wordt doorgestuurd naar de CPU. -> bit flip moet gebeuren na access: kan een cycle meer kosten.
+- Bij write twee tags and LRU bit lezen		-> bij write werd in originele versie geen reads gedaan in tag registers
+	Als de waarde in Most Recently Used tag overeenkomt met address dan overschrijven we die waarde.		-> dit kost niet meer cycles
+	Anders wordt het LRU tag en data sowieso overschreven, en wordt LRU bit geflipt.		-> de bit flip kan tijdens de rest van de write gebeuren.
+
+Stappen van implementatie:
+- Twee caches, één in gebruik.
+- Allebei schrijven, één voor lezen
+- (toevoegen LRU register)
+- Alleen 2-way associative reads, writes naar beide tag registers.
+- Writes ook gesplitst
