@@ -59,7 +59,7 @@ uart_proc: process(clk, reset, enable_read, enable_write, data_in,
 --      "0101000101"; --37.5MHz/115200Hz = 325.52 = 0x145
 --      "0010100011"; --37.5MHz/230400Hz = 163 = 0xA3
 --			"0010110011"; --41.3MHz/230400Hz = 172 = 0xAC
---      "0010101100"; --39.58MHz/230400Hz = 172 = 0xAC
+      "0010101011"; --39.58MHz/230400Hz = 172 = 0xAC
 --        "0011011001"; --50MHz/230400Hz = 217
 --      "1010011100"; --77/115200  = 668 = 0x29c
 --      "0011011001";  --25MHz/115200Hz = 0xd9 = 217
@@ -69,7 +69,7 @@ uart_proc: process(clk, reset, enable_read, enable_write, data_in,
 --		"0001000111";  --352112 0x47 = 71
 --      "0011011001";  --12.5MHz/57600Hz = 0xd9
 --      "0000000100";  --for debug (shorten read_value_reg)
-		"0010111000"; -- 42.5 MHz/230400Hz
+--		"0010111000"; -- 42.5 MHz/230400Hz
 begin
    uart_read2 <= read_value_reg(read_value_reg'length - 1);
 

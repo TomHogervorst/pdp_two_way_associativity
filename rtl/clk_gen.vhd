@@ -32,8 +32,8 @@ begin
     generic map(
       DLL_FREQUENCY_MODE    => "LOW",
       DUTY_CYCLE_CORRECTION => TRUE,
-      CLKFX_DIVIDE          => 20,
-      CLKFX_MULTIPLY        => 17,		
+      CLKFX_DIVIDE          => 24,
+      CLKFX_MULTIPLY        => 19,		
       FACTORY_JF            => X"F0F0"
       )
     port map(
